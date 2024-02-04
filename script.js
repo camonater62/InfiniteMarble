@@ -29,7 +29,6 @@ function loadModel(path) {
     loader.load(path, function(gltf) {
         const track = gltf.scene.children[0];
         const group = new THREE.Group();
-        console.log(track);
         track.children.forEach(child => {
             group.add(
                 new THREE.Mesh(
@@ -63,9 +62,9 @@ fetch("res/all_models.txt")
     .then(response => response.text())
     .then(text => {
         let models = text.split("\n");
-        models = [ models[0] ];
+        // models = [ models[0] ];
         models.forEach(model => {
-            new trackPiece(model);
+            new trackPiece('res/' + model);
         });
     })
     .catch(error => {

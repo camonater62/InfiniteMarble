@@ -16,6 +16,15 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
 
+
+
+
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+}
+animate();
 function loadModel(path) {
     loader.load(path, function(gltf) {
         const track = gltf.scene.children[0];
@@ -43,23 +52,22 @@ function loadModel(path) {
     });
 }
 
+class trackPiece {
+    constructor(name) {
+       this.name = name;
+       loadModel(this.name);
+    }
+ }
+
 fetch("res/all_models.txt")
     .then(response => response.text())
     .then(text => {
         let models = text.split("\n");
         models = [ models[0] ];
         models.forEach(model => {
-            loadModel('res/' + model);
+            new trackPiece(model);
         });
     })
     .catch(error => {
         console.error(error);
     });
-
-
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-}
-animate();

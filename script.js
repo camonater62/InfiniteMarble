@@ -6,11 +6,25 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const loader = new GLTFLoader();
 const renderer = new THREE.WebGLRenderer();
+const dlShadow = new THREE.WebGLRenderer();
+dlShadow.shadowMap.enabled = true;
+dlShadow.shadowMap.type = THREE.PCFSoftShadowMap;
+const directionalLight = new THREE.DirectionalLight(0xffffff,3.7);
+directionalLight.position.set(55,25,25);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+directionalLight.shadow.mapSize.width = 512;
+directionalLight.shadow.mapSize.height = 512;
+directionalLight.shadow.camera.near = .5;
+directionalLight.shadow.camera.far = 500;
+
+// directionalLight.target.updateMatrixWorld();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(0x660066));
 document.body.appendChild(renderer.domElement);
 
-const light = new THREE.AmbientLight(0xffffff, 2.0);
+const light = new THREE.AmbientLight(0xffffff, 1.3);
 scene.add(light);
 
 const controls = new OrbitControls(camera, renderer.domElement);

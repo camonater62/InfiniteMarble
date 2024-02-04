@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import Stats from 'three/addons/libs/stats.module.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const loader = new GLTFLoader();
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(new THREE.Color(0x660066));
+renderer.setClearColor(new THREE.Color(0x131313));
 document.body.appendChild(renderer.domElement);
 
 const light = new THREE.AmbientLight(0xffffff, 2.0);
@@ -16,23 +17,20 @@ scene.add(light);
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
 
+const stats = new Stats();
+stats.showPanel(1);
+document.body.appendChild(stats.dom);
 
 
 
-function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    renderer.render(scene, camera);
-}
-animate();
 function loadModel(path) {
-    loader.load(path, function(gltf) {
+    loader.load(path, function (gltf) {
         const track = gltf.scene.children[0];
         const group = new THREE.Group();
         track.children.forEach(child => {
             group.add(
                 new THREE.Mesh(
-                    child.geometry, 
+                    child.geometry,
                     new THREE.MeshPhongMaterial({ color: child.material.color })
                 )
             );
@@ -45,18 +43,18 @@ function loadModel(path) {
         );
 
         scene.add(group);
-        
-    }, undefined, function(error) {
+
+    }, undefined, function (error) {
         console.error(error);
     });
 }
 
 class trackPiece {
     constructor(name) {
-       this.name = name;
-       loadModel(this.name);
+        this.name = name;
+        loadModel(this.name);
     }
- }
+}
 
 fetch("res/all_models.txt")
     .then(response => response.text())
@@ -70,3 +68,14 @@ fetch("res/all_models.txt")
     .catch(error => {
         console.error(error);
     });
+
+
+function animate() {
+    stats.begin();
+    controls.update();
+    renderer.render(scene, camera);
+    stats.end();
+    requestAnimationFrame(animate);
+}
+animate();
+

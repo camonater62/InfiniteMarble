@@ -10,8 +10,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(0x660066));
 document.body.appendChild(renderer.domElement);
 
-// const light = new THREE.AmbientLight(0x404040);
-// scene.add(light);
+const light = new THREE.AmbientLight(0xffffff, 2.0);
+scene.add(light);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
@@ -19,27 +19,42 @@ camera.position.z = 5;
 function loadModel(path) {
     loader.load(path, function(gltf) {
         const track = gltf.scene.children[0];
-        const main_obj = track.children[0];
-        const rail_obj = track.children[1];
-    
-        const main = new THREE.Mesh(
-            main_obj.geometry, 
-            new THREE.MeshBasicMaterial({ color: main_obj.material.color})
+        const group = new THREE.Group();
+        console.log(track);
+        track.children.forEach(child => {
+            group.add(
+                new THREE.Mesh(
+                    child.geometry, 
+                    new THREE.MeshPhongMaterial({ color: child.material.color })
+                )
+            );
+        });
+
+        group.position.set(
+            Math.random() * 20 - 10,
+            Math.random() * 20 - 10,
+            Math.random() * 20 - 10
         );
-        scene.add(main);
-    
-        const rail = new THREE.Mesh(
-            rail_obj.geometry, 
-            new THREE.MeshBasicMaterial({ color: rail_obj.material.color})
-        );
-        scene.add(rail);
+
+        scene.add(group);
         
     }, undefined, function(error) {
         console.error(error);
     });
 }
 
-loadModel('res/helix_large_left.glb');
+fetch("res/all_models.txt")
+    .then(response => response.text())
+    .then(text => {
+        let models = text.split("\n");
+        models = [ models[0] ];
+        models.forEach(model => {
+            loadModel('res/' + model);
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
 
 
 function animate() {

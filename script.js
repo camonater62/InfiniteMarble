@@ -10,23 +10,22 @@ const loader = new GLTFLoader();
 const renderer = new THREE.WebGLRenderer();
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-const directionalLight = new THREE.DirectionalLight(0xffffff,3.7);
-directionalLight.position.set(55,25,25);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3.7);
+directionalLight.position.set(55, 25, 25);
 directionalLight.castShadow = true;
-scene.add(directionalLight);
 directionalLight.shadow.mapSize.width = 2048;
 directionalLight.shadow.mapSize.height = 2048;
 directionalLight.shadow.camera.near = .1;
 directionalLight.shadow.camera.far = 1000;
+scene.add(directionalLight);
 
-// directionalLight.target.updateMatrixWorld();
+const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+scene.add(ambientLight);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(0x131313));
 document.body.appendChild(renderer.domElement);
-
-const light = new THREE.AmbientLight(0xffffff, 1);
-scene.add(light);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
@@ -37,31 +36,31 @@ document.body.appendChild(stats.dom);
 
 function loadModel(path) {
     loader.load(path, function (gltf) {
-        const track = gltf.scene.children[0];
+
         const group = new THREE.Group();
-        track.children.forEach(child => {
+        gltf.scene.children[0].children.forEach(child => {
             let color = child.material.color;
             if (color.r === 1 && color.g === 1 && color.b === 1) {
                 // Weird pieces
             } else {
-                if (color.r === 0.2796306) {
-                    // Track color
-                    // color = 0x2d0000;
-                }
-                else if (color.r === 0.6242308) {
-                    // Groove color
-                    
-                }
                 const mesh = new THREE.Mesh(
                     child.geometry,
                     new THREE.MeshPhongMaterial({ color: color })
                 );
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
+
+                if (color.r === 0.2796306) {
+                    // Track color
+                    // color = 0x2d0000;
+                }
+                else if (color.r === 0.6242308) {
+                    // Groove color
+                }
+
                 group.add(mesh);
-                
+
             }
-            
         });
 
         group.position.set(
@@ -88,7 +87,7 @@ fetch("res/all_models.txt")
     .then(response => response.text())
     .then(text => {
         let models = text.split("\n");
-        // models = [ models[0] ];
+        // models = [ models[1] ];
         models.forEach(model => {
             new trackPiece('res/' + model);
         });
@@ -96,7 +95,6 @@ fetch("res/all_models.txt")
     .catch(error => {
         console.error(error);
     });
-
 
 function animate() {
     stats.begin();

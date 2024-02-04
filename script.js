@@ -16,30 +16,7 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 camera.position.z = 5;
 
-function loadModel(path) {
-    loader.load(path, function(gltf) {
-        const track = gltf.scene.children[0];
-        const main_obj = track.children[0];
-        const rail_obj = track.children[1];
-    
-        const main = new THREE.Mesh(
-            main_obj.geometry, 
-            new THREE.MeshBasicMaterial({ color: main_obj.material.color})
-        );
-        scene.add(main);
-    
-        const rail = new THREE.Mesh(
-            rail_obj.geometry, 
-            new THREE.MeshBasicMaterial({ color: rail_obj.material.color})
-        );
-        scene.add(rail);
-        
-    }, undefined, function(error) {
-        console.error(error);
-    });
-}
 
-loadModel('res/helix_large_left.glb');
 
 
 function animate() {
@@ -48,3 +25,33 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
+function loadModel(path) {
+   loader.load(path, function(gltf) {
+       const track = gltf.scene.children[0];
+       const main_obj = track.children[0];
+       const rail_obj = track.children[1];
+   
+       const main = new THREE.Mesh(
+           main_obj.geometry, 
+           new THREE.MeshBasicMaterial({ color: main_obj.material.color})
+       );
+       scene.add(main);
+   
+       const rail = new THREE.Mesh(
+           rail_obj.geometry, 
+           new THREE.MeshBasicMaterial({ color: rail_obj.material.color})
+       );
+       scene.add(rail);
+       
+   }, undefined, function(error) {
+       console.error(error);
+   });
+}
+
+class trackPiece {
+   constructor(name) {
+      this.name = name;
+      loadModel(this.name);
+   }
+}
+const piece1 = new trackPiece('res/helix_large_left.glb');

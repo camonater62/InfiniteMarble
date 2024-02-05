@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
 const scene = new THREE.Scene();
@@ -45,7 +45,7 @@ function loadModel(path) {
             } else {
                 const mesh = new THREE.Mesh(
                     child.geometry,
-                    new THREE.MeshPhongMaterial({ color: color })
+                    new THREE.MeshPhongMaterial({ color: color, wireframe: true })
                 );
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
@@ -53,6 +53,7 @@ function loadModel(path) {
                 if (color.r === 0.2796306) {
                     // Track color
                     // color = 0x2d0000;
+                    return;
                 }
                 else if (color.r === 0.6242308) {
                     // Groove color
@@ -87,7 +88,7 @@ fetch("res/all_models.txt")
     .then(response => response.text())
     .then(text => {
         let models = text.split("\n");
-        // models = [ models[1] ];
+        // models = [ models[0] ];
         models.forEach(model => {
             new trackPiece('res/' + model);
         });

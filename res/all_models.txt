@@ -1,11 +1,9 @@
-bend.glb
 bend_large.glb
 bend_medium.glb
 bump_A.glb
 bump_B.glb
 bump_C.glb
 bump_D.glb
-corner.glb
 curve.glb
 curve_large.glb
 helix_half_left.glb
@@ -36,9 +34,6 @@ s-curve_left.glb
 s-curve_left_large.glb
 s-curve_right.glb
 s-curve_right_large.glb
-s-curve_short_left_A.glb
-s-curve_short_left_B.glb
-s-curve_short_left_C.glb
 slant_A.glb
 slant_B.glb
 slant_C.glb
@@ -48,6 +43,3 @@ slant_long_B.glb
 slant_long_C.glb
 slant_long_D.glb
 straight.glb
-wave_A.glb
-wave_B.glb
-wave_C.glb
